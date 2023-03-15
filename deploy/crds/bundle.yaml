@@ -6161,6 +6161,9 @@ spec:
                       match:
                         description: Match a given Secret Key to be pushed to the provider.
                         properties:
+                          option:
+                            description: 'Get Secret Option. Possible Values: "Raw/Plain". Defaults to "Raw".'
+                            type: string
                           remoteRef:
                             description: Remote Refs to push to providers.
                             properties:
@@ -6425,6 +6428,9 @@ spec:
                         match:
                           description: Match a given Secret Key to be pushed to the provider.
                           properties:
+                            option:
+                              description: 'Get Secret Option. Possible Values: "Raw/Plain". Defaults to "Raw".'
+                              type: string
                             remoteRef:
                               description: Remote Refs to push to providers.
                               properties:

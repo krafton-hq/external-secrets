@@ -17,6 +17,7 @@ package pushsecret
 import (
 	"context"
 	"errors"
+	"encoding/json"
 	"fmt"
 	"maps"
 	"strings"
@@ -294,7 +295,43 @@ func (r *Reconciler) PushSecretToProviders(ctx context.Context, stores map[esapi
 	for ref, store := range stores {
 		out, err := r.handlePushSecretDataForStore(ctx, ps, secret, out, mgr, store.GetName(), ref.Kind)
 		if err != nil {
-			return out, err
+			return out, fmt.Errorf("could not get secrets client for store %v: %w", store.GetName(), err)
+		}
+
+		for _, ref := range ps.Spec.Data {
+			var secretValue []byte
+			if ref.Match.Option == esapi.Plain {
+				secretData := map[string]string{}
+				if ref.Match.SecretKey == "" {
+					for k, v := range secret.Data {
+						secretData[k] = string(v)
+					}
+				} else {
+					v, ok := secret.Data[ref.Match.SecretKey]
+					if !ok {
+						return out, fmt.Errorf("secret key %v does not exist", ref.Match.SecretKey)
+					}
+					secretData[ref.Match.SecretKey] = string(v)
+				}
+				secretValue, err = json.Marshal(secretData)
+				if err != nil {
+					return out, fmt.Errorf("secret data json marshal failed: %w", err)
+				}
+			} else if ref.Match.Option == esapi.Raw || ref.Match.Option == "" {
+				var ok bool
+				secretValue, ok = secret.Data[ref.Match.SecretKey]
+				if !ok {
+					return out, fmt.Errorf("secret key %v does not exist", ref.Match.SecretKey)
+				}
+			} else {
+				return out, fmt.Errorf("option error: %v", ref.Match.Option)
+			}
+
+			err := client.PushSecret(ctx, secretValue, ref.Match.RemoteRef)
+			if err != nil {
+				return out, fmt.Errorf(errSetSecretFailed, ref.Match.SecretKey, store.GetName(), err)
+			}
+			out[storeKey][ref.Match.RemoteRef.RemoteKey] = ref
 		}
 	}
 	return out, nil

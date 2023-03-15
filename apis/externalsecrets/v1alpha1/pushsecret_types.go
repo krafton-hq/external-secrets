@@ -114,17 +114,27 @@ func (r PushSecretRemoteRef) GetProperty() string {
 	return r.Property
 }
 
+// PushSecretMatchOption
+type PushSecretMatchOption string
+
+const (
+	Raw   PushSecretMatchOption = "Raw"
+	Plain PushSecretMatchOption = "Plain"
+)
+
 type PushSecretMatch struct {
 	// Secret Key to be pushed
 	// +optional
 	SecretKey string `json:"secretKey,omitempty"`
+	// Get Secret Option. Possible Values: "Raw/Plain". Defaults to "Raw".
+	Option PushSecretMatchOption `json:"option,omitempty"`
 	// Remote Refs to push to providers.
 	RemoteRef PushSecretRemoteRef `json:"remoteRef"`
 }
 
 type PushSecretData struct {
 	// Match a given Secret Key to be pushed to the provider.
-	Match PushSecretMatch `json:"match"`
+	Match PushSecretMatch `json:"match,omitempty"`
 	// Metadata is metadata attached to the secret.
 	// The structure of metadata is provider specific, please look it up in the provider documentation.
 	// +optional
