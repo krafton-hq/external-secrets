@@ -251,7 +251,7 @@ func (r *Reconciler) PushSecretToProviders(ctx context.Context, stores map[esapi
 			var secretValue []byte
 			if ref.Match.Option == esapi.Plain {
 				secretData := map[string]string{}
-				if ref.Match.SecretKey != "" {
+				if ref.Match.SecretKey == "" {
 					for k, v := range secret.Data {
 						secretData[k] = string(v)
 					}
@@ -266,12 +266,14 @@ func (r *Reconciler) PushSecretToProviders(ctx context.Context, stores map[esapi
 				if err != nil {
 					return out, fmt.Errorf("secret data json marshal failed: %w", err)
 				}
-			} else {
+			} else if ref.Match.Option == esapi.Raw || ref.Match.Option == "" {
 				var ok bool
 				secretValue, ok = secret.Data[ref.Match.SecretKey]
 				if !ok {
 					return out, fmt.Errorf("secret key %v does not exist", ref.Match.SecretKey)
 				}
+			} else {
+				return out, fmt.Errorf("option error: %v", ref.Match.Option)
 			}
 
 			err := client.PushSecret(ctx, secretValue, ref.Match.RemoteRef)
