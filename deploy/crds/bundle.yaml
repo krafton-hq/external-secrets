@@ -3578,6 +3578,9 @@ spec:
                       match:
                         description: Match a given Secret Key to be pushed to the provider.
                         properties:
+                          option:
+                            description: PushSecretMatchOption
+                            type: string
                           remoteRef:
                             description: Remote Refs to push to providers.
                             properties:
@@ -3592,10 +3595,7 @@ spec:
                             type: string
                         required:
                           - remoteRef
-                          - secretKey
                         type: object
-                    required:
-                      - match
                     type: object
                   type: array
                 deletionPolicy:
@@ -3703,6 +3703,9 @@ spec:
                         match:
                           description: Match a given Secret Key to be pushed to the provider.
                           properties:
+                            option:
+                              description: PushSecretMatchOption
+                              type: string
                             remoteRef:
                               description: Remote Refs to push to providers.
                               properties:
@@ -3717,10 +3720,7 @@ spec:
                               type: string
                           required:
                             - remoteRef
-                            - secretKey
                           type: object
-                      required:
-                        - match
                       type: object
                     type: object
                   description: Synced Push Secrets for later deletion. Matches Secret Stores to PushSecretData that was stored to that secretStore.

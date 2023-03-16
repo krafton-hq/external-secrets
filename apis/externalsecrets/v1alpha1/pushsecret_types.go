@@ -79,16 +79,25 @@ func (r PushSecretRemoteRef) GetRemoteKey() string {
 	return r.RemoteKey
 }
 
+// PushSecretMatchOption
+type PushSecretMatchOption string
+
+const (
+	Raw   PushSecretMatchOption = "Raw"
+	Plain PushSecretMatchOption = "Plain"
+)
+
 type PushSecretMatch struct {
 	// Secret Key to be pushed
-	SecretKey string `json:"secretKey"`
+	SecretKey string                `json:"secretKey,omitempty"`
+	Option    PushSecretMatchOption `json:"option,omitempty"`
 	// Remote Refs to push to providers.
 	RemoteRef PushSecretRemoteRef `json:"remoteRef"`
 }
 
 type PushSecretData struct {
 	// Match a given Secret Key to be pushed to the provider.
-	Match PushSecretMatch `json:"match"`
+	Match PushSecretMatch `json:"match,omitempty"`
 }
 
 // PushSecretConditionType indicates the condition of the PushSecret.
