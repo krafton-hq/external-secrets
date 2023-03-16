@@ -3579,7 +3579,7 @@ spec:
                         description: Match a given Secret Key to be pushed to the provider.
                         properties:
                           option:
-                            description: PushSecretMatchOption
+                            description: 'Get Secret Option. Possible Values: "Raw/Plain". Defaults to "Raw".'
                             type: string
                           remoteRef:
                             description: Remote Refs to push to providers.
@@ -3704,7 +3704,7 @@ spec:
                           description: Match a given Secret Key to be pushed to the provider.
                           properties:
                             option:
-                              description: PushSecretMatchOption
+                              description: 'Get Secret Option. Possible Values: "Raw/Plain". Defaults to "Raw".'
                               type: string
                             remoteRef:
                               description: Remote Refs to push to providers.

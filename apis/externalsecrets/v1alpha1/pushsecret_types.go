@@ -89,8 +89,9 @@ const (
 
 type PushSecretMatch struct {
 	// Secret Key to be pushed
-	SecretKey string                `json:"secretKey,omitempty"`
-	Option    PushSecretMatchOption `json:"option,omitempty"`
+	SecretKey string `json:"secretKey,omitempty"`
+	// Get Secret Option. Possible Values: "Raw/Plain". Defaults to "Raw".
+	Option PushSecretMatchOption `json:"option,omitempty"`
 	// Remote Refs to push to providers.
 	RemoteRef PushSecretRemoteRef `json:"remoteRef"`
 }
